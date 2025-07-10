@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "9f11f273-43ae-4b88-8d6c-a75d6ec38b28",
+		"name": "Alpha Vantage Finance API testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46632154",
+		"_collection_link": "https://rv-8083040.postman.co/workspace/RV's-Workspace~a9b9699e-fd4d-4d59-8c73-a923614a7f21/collection/46632154-9f11f273-43ae-4b88-8d6c-a75d6ec38b28?action=share&source=collection_link&creator=46632154"
+	},
+	"item": [
+		{
+			"name": "{{base_url}}?function=GLOBAL_QUOTE&symbol=MSFT&apikey={{api_key}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200.\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response has global quote.\", function(){\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"Global Quote\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Symbol is MSFT.\", function(){\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData[\"Global Quote\"][\"01. symbol\"]).to.be.eql(\"MSFT\");\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}?function=GLOBAL_QUOTE&symbol=MSFT&apikey={{api_key}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"query": [
+						{
+							"key": "function",
+							"value": "GLOBAL_QUOTE"
+						},
+						{
+							"key": "symbol",
+							"value": "MSFT"
+						},
+						{
+							"key": "apikey",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Time_Series_Daily - TSLA",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Has timeSeries Daily Data array\", function(){\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"Time Series (Daily)\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Symbol is TSLA (Meta validation)\", function(){\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData[\"Meta Data\"][\"2. Symbol\"]).to.be.eql(\"TSLA\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validate stock daily data is present.\", function(){\r",
+							"    const jsonData = pm.response.json();\r",
+							"    const series = jsonData[\"Time Series (Daily)\"]\r",
+							"    pm.expect(Object.keys(series).length).to.be.above(0);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}?function=TIME_SERIES_DAILY&symbol=TSLA&apikey={{api_key}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"query": [
+						{
+							"key": "function",
+							"value": "TIME_SERIES_DAILY"
+						},
+						{
+							"key": "symbol",
+							"value": "TSLA"
+						},
+						{
+							"key": "apikey",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Symbol_Search (Company Lookup)",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
