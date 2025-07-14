@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "9f11f273-43ae-4b88-8d6c-a75d6ec38b28",
+		"name": "Alpha Vantage Finance API testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46632154",
+		"_collection_link": "https://rv-8083040.postman.co/workspace/RV's-Workspace~a9b9699e-fd4d-4d59-8c73-a923614a7f21/collection/46632154-9f11f273-43ae-4b88-8d6c-a75d6ec38b28?action=share&source=collection_link&creator=46632154"
+	},
+	"item": [
+		{
+			"name": "validating_global_quote_function",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200.\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Response has global quote.\", function(){\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"Global Quote\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Symbol is TSLA.\", function(){\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData[\"Global Quote\"][\"01. symbol\"]).to.be.eql(\"TSLA\");\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}?function=GLOBAL_QUOTE&symbol={{stock_symbol}}&apikey={{api_key}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"query": [
+						{
+							"key": "function",
+							"value": "GLOBAL_QUOTE"
+						},
+						{
+							"key": "symbol",
+							"value": "{{stock_symbol}}"
+						},
+						{
+							"key": "apikey",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "validating_time_series_function",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Has timeSeries Daily Data array\", function(){\r",
+							"    pm.expect(jsonData).to.have.property(\"Time Series (Daily)\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Symbol is TSLA (Meta validation)\", function(){\r",
+							"    pm.expect(jsonData[\"Meta Data\"][\"2. Symbol\"]).to.be.eql(\"TSLA\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validate stock daily data is present.\", function(){\r",
+							"    const series = jsonData[\"Time Series (Daily)\"]\r",
+							"    pm.expect(Object.keys(series).length).to.be.above(0);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validate Meta Data is present\", function(){\r",
+							"    pm.expect(jsonData).to.have.property(\"Meta Data\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validate last refreshed data is a valid ISO date\", function(){\r",
+							"    const date = jsonData[\"Meta Data\"][\"3. Last Refreshed\"];\r",
+							"    pm.expect(date).to.match(/^\\d{4}-\\d{2}-\\d{2}/);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}?function=TIME_SERIES_DAILY&symbol=TSLA&apikey={{api_key}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"query": [
+						{
+							"key": "function",
+							"value": "TIME_SERIES_DAILY"
+						},
+						{
+							"key": "symbol",
+							"value": "TSLA"
+						},
+						{
+							"key": "apikey",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "validating_symbl_search_function",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200.\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"has bestMatch Array\", function(){\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"bestMatches\");\r",
+							"    pm.expect(jsonData.bestMatches.length).to.be.above(0);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"result has tesla\", function(){\r",
+							"    const jsonData = pm.response.json();\r",
+							"    const found = jsonData.bestMatches.some(match => \r",
+							"                            match[\"2. name\"].toLowerCase().includes(\"tesla\"));\r",
+							"    pm.expect(found).to.be.true;\r",
+							"\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}?function=SYMBOL_SEARCH&keywords=Tesla&apikey={{api_key}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"query": [
+						{
+							"key": "function",
+							"value": "SYMBOL_SEARCH"
+						},
+						{
+							"key": "keywords",
+							"value": "Tesla"
+						},
+						{
+							"key": "apikey",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
