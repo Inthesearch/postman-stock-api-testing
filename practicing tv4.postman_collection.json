@@ -1,0 +1,96 @@
+{
+	"info": {
+		"_postman_id": "59bcf21d-99b5-484d-bb58-2de9aade1c31",
+		"name": "practicing tv4",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46632154",
+		"_collection_link": "https://rv-8083040.postman.co/workspace/RV's-Workspace~a9b9699e-fd4d-4d59-8c73-a923614a7f21/collection/46632154-59bcf21d-99b5-484d-bb58-2de9aade1c31?action=share&source=collection_link&creator=46632154"
+	},
+	"item": [
+		{
+			"name": "validating_global_quote_schema",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const schema = {\r",
+							"  type: \"object\",\r",
+							"  additionalProperties: false,\r",
+							"  properties: {\r",
+							"    \"Global Quote\": {\r",
+							"      type: \"object\",\r",
+							"      additionalProperties: false,\r",
+							"      properties: {\r",
+							"        \"01. symbol\": { type: \"string\" },\r",
+							"        \"02. open\": { type: \"string\" },\r",
+							"        \"03. high\": { type: \"string\" },\r",
+							"        \"04. low\": { type: \"string\" },\r",
+							"        \"05. price\": { type: \"string\" },\r",
+							"        \"06. volume\": { type: \"string\" },\r",
+							"        \"07. latest trading day\": { type: \"string\" },\r",
+							"        \"08. previous close\": { type: \"string\" },\r",
+							"        \"09. change\": { type: \"string\" },\r",
+							"        \"10. change percent\": { type: \"string\" }\r",
+							"      },\r",
+							"      required: [\r",
+							"        \"01. symbol\",\r",
+							"        \"02. open\",\r",
+							"        \"03. high\",\r",
+							"        \"04. low\",\r",
+							"        \"05. price\",\r",
+							"        \"06. volume\",\r",
+							"        \"07. latest trading day\",\r",
+							"        \"08. previous close\",\r",
+							"        \"09. change\",\r",
+							"        \"10. change percent\"\r",
+							"      ]\r",
+							"    }\r",
+							"  },\r",
+							"  required: [\"Global Quote\"]\r",
+							"};\r",
+							"\r",
+							"\r",
+							"const jsonData = pm.response.json();\r",
+							"pm.test(\"Validata Global Quote schema using tv4\", ()=>{\r",
+							"    const valid = tv4.validate(jsonData, schema);\r",
+							"    console.log(JSON.stringify(jsonData, null, 2));\r",
+							"    if(!valid){\r",
+							"        console.warn(\"Schema validation failed.\", tv4.error)\r",
+							"    }\r",
+							"    pm.expect(valid).to.be.true\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}?function=GLOBAL_QUOTE&symbol={{env_symbols}}&apikey={{api_key}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"query": [
+						{
+							"key": "function",
+							"value": "GLOBAL_QUOTE"
+						},
+						{
+							"key": "symbol",
+							"value": "{{env_symbols}}"
+						},
+						{
+							"key": "apikey",
+							"value": "{{api_key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
